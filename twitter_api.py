@@ -1,6 +1,5 @@
 import tweepy
 import pandas as pd
-from secrets_info import secret
 from requests_oauthlib import OAuth1Session
 from dotenv import load_dotenv
 import os
