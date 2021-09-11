@@ -1,17 +1,18 @@
 import tweepy
 import pandas as pd
 from secrets_info import secret
+from requests_oauthlib import OAuth1Session
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 ACCOUNT = {
-    "consumer_key": secret.consumer_key,
-    "consumer_secret": secret.consumer_secret,
-    "access_token": secret.access_token,
-    "access_token_secret": secret.access_token_secret
+    "consumer_key": os.getenv('CONSUMER_KEY'),
+    "consumer_secret": os.getenv('CONSUMER_SECRET'),
+    "access_token": os.getenv('ACCESS_TOKEN'),
+    "access_token_secret": os.getenv('ACCESS_TOKEN_SECRET'),
 }
-
-SEARCH_TWEETS_URL = 'https://api.twitter.com/1.1/search/tweets.json'
-RATE_LIMIT_STATUS_URL = "https://api.twitter.com/1.1/application/rate_limit_status.json"
-SEARCH_LIMIT_COUNT = 10
 
 
 class Twitter_api:
@@ -33,6 +34,7 @@ class Twitter_api:
         self.api.update_status(text)
 
     def get_tweets(self, account, count):
+        # 特定のユーザーのツイートを取得する
         tweets = self.api.user_timeline(account, count=count, page=1)
         df = pd.DataFrame(columns=[
             "tweetId",
@@ -58,4 +60,4 @@ class Twitter_api:
 if __name__ == "__main__":
     my_twitter = Twitter_api(ACCOUNT)
     # my_twitter.tweet("お疲れ様です。")
-    # print(my_twitter.get_tweets("tocho_covid19", 10))
+    print(my_twitter.get_tweets("tocho_covid19", 10))

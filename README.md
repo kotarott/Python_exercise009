@@ -7,12 +7,13 @@ Twitter連携
 
 ## インストール
 pip install tweepy  
+pip install python-dotenv  
   
 
 ## ファイルの準備
-secrets_infoフォルダを作成し、secret.pyを作成する。  
-下記の情報を追加する。  
->consumer_key = "consumer_key"  
->consumer_secret = "consumer_secret"  
->access_token = "access_token"  
->access_token_secret = "access_token_secret"  
+.envファイルをトップに作成  
+以下の情報を記載する。  
+>CONSUMER_KEY = [自分のキー]  
+>CONSUMER_SECRET = [自分のキー]  
+>ACCESS_TOKEN = [自分のキー]  
+>ACCESS_TOKEN_SECRET = [自分のキー]  
