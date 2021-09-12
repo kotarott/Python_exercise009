@@ -42,7 +42,13 @@ def get_amazon_items(keyword):
     elif os.name == 'posix': #Mac
         driver = set_driver("chromedriver", False)
     
-    url = ""
+    url = "https://www.amazon.co.jp/s?k=" + keyword + "&__mk_ja_JP=" + "カタカナ" + "&ref=nb_sb_noss_1"
+    driver.get(url)
+    time.sleep(2)
+
+    search_results = driver.find_elements_by_css_selector(".s-result-item")
+    items = get_item_list(search_results)
+    return items
 
 # amazonの商品在庫確認
 def get_amazon_stock_status_by_asin(asin_code):
@@ -55,6 +61,19 @@ def get_amazon_stock_status_by_asin(asin_code):
     url = "https://www.amazon.co.jp/dp/" + asin_code
     # buy-now-button　の有無で確認する
 
+def get_item_list(results):
+    items = {}
+    for i, result in enumerate(results):
+        result_type = result.get_attribute("data-component-type")
+        if result_type == "s-search-result":
+            items["item_asin"] = result.get_attribute("data-asin")  #これはダメ
+            asin = result.get_attribute("data-asin")  #これはイケる
+            item_detail = result.find_element_by_css_selector(".s-image-square-aspect .s-image")
+            items["item_img"] = item_detail.get_attribute("src")
+            items["item_name"] = item_detail.get_attribute("alt")
+            # url = result.find_element_by_css_selector(".a-link-normal .s-no-outline")  #.get_attribute("href")
+            print(asin)
+    return items
 
 # ニュース一覧の取得
 def get_ro_news_title(search_keyword):
@@ -67,7 +86,7 @@ def get_ro_news_title(search_keyword):
     url = "https://jp.reuters.com/search/news?blob=" + search_keyword.replace(' ', '+') + "&sortBy=date&dateRange=all"
 
     driver.get(url)
-    time.sleep(2)
+    time.sleep(5)
 
     news_titles = driver.find_elements_by_css_selector(".search-result-indiv .search-result-title")
     news_dates = driver.find_elements_by_css_selector(".search-result-indiv .search-result-timestamp")
