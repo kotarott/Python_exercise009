@@ -59,52 +59,27 @@ def get_amazon_stock_status_by_asin(asin_code):
         driver = set_driver("chromedriver", False)
     
     url = "https://www.amazon.co.jp/dp/" + asin_code
+    driver.get(url)
+    time.sleep(3)
+
     # buy-now-button　の有無で確認する
+    try:
+        buy_button = driver.find_element_by_id("buy-now-button")
+        return "在庫あり"
+    except:
+        return "在庫なし"
 
 def get_item_list(results):
     items = {}
     for i, result in enumerate(results):
         result_type = result.get_attribute("data-component-type")
         if result_type == "s-search-result":
-            items["item_asin"] = result.get_attribute("data-asin")  #これはダメ
-            asin = result.get_attribute("data-asin")  #これはイケる
+            items["item_asin"] = result.get_attribute("data-asin")
             item_detail = result.find_element_by_css_selector(".s-image-square-aspect .s-image")
             items["item_img"] = item_detail.get_attribute("src")
             items["item_name"] = item_detail.get_attribute("alt")
-            # url = result.find_element_by_css_selector(".a-link-normal .s-no-outline")  #.get_attribute("href")
-            print(asin)
+            items["url"] = "https://www.amazon.co.jp/dp/" + items["item_asin"]
     return items
-
-# ニュース一覧の取得
-def get_ro_news_title(search_keyword):
-    # driverを起動
-    if os.name == 'nt': #Windows
-        driver = set_driver("chromedriver.exe", False)
-    elif os.name == 'posix': #Mac
-        driver = set_driver("chromedriver", False)
-
-    url = "https://jp.reuters.com/search/news?blob=" + search_keyword.replace(' ', '+') + "&sortBy=date&dateRange=all"
-
-    driver.get(url)
-    time.sleep(5)
-
-    news_titles = driver.find_elements_by_css_selector(".search-result-indiv .search-result-title")
-    news_dates = driver.find_elements_by_css_selector(".search-result-indiv .search-result-timestamp")
-    time.sleep(2)
-    news_links = get_links(news_titles)
-
-    # 空のDataFrame作成
-    df = pd.DataFrame()
-    for count, (title, news_link, news_date) in enumerate(zip(news_titles, news_links, news_dates)):
-
-        df = df.append(
-                {"title": title.text,
-                "link": news_link,
-                "date": news_date.text}, 
-                ignore_index=True)
-    
-    driver.close()
-    return list(df["title"]), list(df["link"]), list(df["date"])
 
 def get_links(news_titles):
     news_links = []
