@@ -13,6 +13,7 @@ amazonの在庫状況を確認してツイートするアプリケーション
 >pip install eel  
 >pip install selenium  
 >pip install webdriver_manager  
+>pip install pandas  
   
 
 ## ファイルの準備
@@ -22,3 +23,9 @@ amazonの在庫状況を確認してツイートするアプリケーション
 >CONSUMER_SECRET = [自分のキー]  
 >ACCESS_TOKEN = [自分のキー]  
 >ACCESS_TOKEN_SECRET = [自分のキー]  
+  
+
+### memo
+処理の起動・更新・停止機能を入れる。  
+複数商品の在庫状況を決まった時間ごとに監視（マルチスレッド）  
+↑クラスにしたスレッドにインスタンス変数が変わらなければ、同じ処理を繰り返し続けるようにする。  

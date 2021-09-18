@@ -35,20 +35,20 @@ def set_driver(driver_path, headless_flg):
         return Firefox(executable_path=os.getcwd()  + "/" + driver_path,options=options)
 
 # 検索ワードから商品リストを作成
-def get_amazon_items(keyword):
+def get_amazon_items(keyword, page):
     # driverを起動
     if os.name == 'nt': #Windows
         driver = set_driver("chromedriver.exe", False)
     elif os.name == 'posix': #Mac
         driver = set_driver("chromedriver", False)
     
-    url = "https://www.amazon.co.jp/s?k=" + keyword + "&__mk_ja_JP=" + "カタカナ" + "&ref=nb_sb_noss_1"
+    url = "https://www.amazon.co.jp/s?k=" + keyword + "&page=" + str(page) + "&__mk_ja_JP=" + "カタカナ" + "&ref=nb_sb_noss_1"
     driver.get(url)
-    time.sleep(2)
+    time.sleep(5)
 
     search_results = driver.find_elements_by_css_selector(".s-result-item")
     items = get_item_list(search_results)
-    return items
+    return list(items["asin"]), list(items["img"]), list(items["name"]), list(items["url"])
 
 # amazonの商品在庫確認
 def get_amazon_stock_status_by_asin(asin_code):
@@ -70,16 +70,32 @@ def get_amazon_stock_status_by_asin(asin_code):
         return "在庫なし"
 
 def get_item_list(results):
-    items = {}
+    df = pd.DataFrame()
     for i, result in enumerate(results):
         result_type = result.get_attribute("data-component-type")
         if result_type == "s-search-result":
-            items["item_asin"] = result.get_attribute("data-asin")
+            item_asin = result.get_attribute("data-asin")
             item_detail = result.find_element_by_css_selector(".s-image-square-aspect .s-image")
-            items["item_img"] = item_detail.get_attribute("src")
-            items["item_name"] = item_detail.get_attribute("alt")
-            items["url"] = "https://www.amazon.co.jp/dp/" + items["item_asin"]
-    return items
+            item_img = item_detail.get_attribute("src")
+            item_name = item_detail.get_attribute("alt")
+            item_url = "https://www.amazon.co.jp/dp/" + item_asin
+            # item_price = result.find_element_by_css_selector("span.a-price-whole")
+            # print(item_price)
+            # try:
+            #     item_price = result.find_element_by_css_selector("span.a-price-whole").text
+            # except:
+            #     item_price = "なし"
+            df = df.append(
+                {
+                    "asin": item_asin,
+                    "img": item_img,
+                    "name": item_name,
+                    "url": item_url,
+                    # "price": item_price
+                },
+                ignore_index=True
+            )
+    return df
 
 def get_links(news_titles):
     news_links = []
@@ -125,4 +141,4 @@ def create_log(comment):
 
 
 if __name__ == "__main__":
-    pass
+    get_amazon_items("PS5", 2)

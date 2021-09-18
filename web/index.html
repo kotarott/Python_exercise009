@@ -4,28 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>amazon在庫チェッカー</title>
+    <title>在庫チェッカー</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">株式市況</a>
+            <a class="navbar-brand" href="#">在庫チェッカー</a>
         </div>
     </nav>
     <main>
         <section class="py-3 px-2">
             <div class="card">
                 <div class="card-header">
-                    市況リスト
+                    商品キーワード検索
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">検索</h5>
-                    <select class="form-select mb-2" aria-label="Default select example" id="source">
-                        <option value="ro">ロイター</option>
-                        <option value="nky">日経新聞</option>
-                    </select>
                     <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="search_word">
                     <div class="text-end mt-1">
                         <a href="#" class="btn btn-primary" id="search_btn">検索</a>
@@ -36,23 +32,33 @@
         <section class="py-3 px-2">
             <div class="card">
                 <div class="card-header">
-                    ニュース
+                    商品リスト
                 </div>
                 <div class="card-body">
                     <table class="table">
                         <thead class="table-light">
                             <tr>
                                 <th>##</th>
-                                <th>日付</th>
-                                <th>タイトル</th>
+                                <th>商品イメージ</th>
+                                <th>商品名</th>
+                                <th>ASIN</th>
                             </tr>
                         </thead>
-                        <tbody id="order_list">
-                            
+                        <tbody id="item_list">
+                            <tr>
+                                <td><input type='checkbox' class='form-check-input' value='B08GGGBKRQ'></td>
+                                <td><img class='pict' src='https://m.media-amazon.com/images/I/61YYOeZy9aL._AC_UL480_QL65_.jpg' alt=''></td>
+                                <td>
+                                    <a href="https://www.amazon.co.jp/dp/B08GGGBKRQ">
+                                        PlayStation 5 (CFI-1000A01)
+                                    </a>
+                                </td>
+                                <td>B08GGGBKRQ</td>
+                            </tr>
                         </tbody>
                     </table>
                     <div class="text-end mt-1">
-                        <a href="#" class="btn btn-primary" id="output">CSV出力</a>
+                        <a href="#" class="btn btn-primary" id="output">在庫チェックtweet</a>
                     </div>
                 </div>
             </div>

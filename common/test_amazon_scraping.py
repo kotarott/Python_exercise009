@@ -1,7 +1,7 @@
 import amazon_scraping as ama
 
 def test_get_amazon_items():
-    res = ama.get_amazon_items("PS5")
+    res = ama.get_amazon_items("PS5", 1)
     assert len(res) > 0
 
 def test_get_amazon_stock_status_by_asin():
