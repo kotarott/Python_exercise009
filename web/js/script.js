@@ -16,16 +16,16 @@ $("#search_btn").on("click", function(){
   })
   
   $("#output").on("click", function() {
-    let url_list = []
+    let items = []
     $('.form-check-input').each((i,e)=>{
       if($(e).is(':checked')) {
-        url_list.push(e.value)
+        items.push(e.value)
       }
     });
 
-    if(url_list) {
+    if(items) {
       async function run() {
-        await eel.get_articles(url_list)();
+        await eel.check_and_tweet(items)();
       }
       run();
     } else {
