@@ -42,12 +42,16 @@ def get_amazon_items(keyword, page):
     elif os.name == 'posix': #Mac
         driver = set_driver("chromedriver", False)
     
-    url = "https://www.amazon.co.jp/s?k=" + keyword + "&page=" + str(page) + "&__mk_ja_JP=" + "カタカナ" + "&ref=nb_sb_noss_1"
-    driver.get(url)
-    time.sleep(5)
+    try:
+        url = "https://www.amazon.co.jp/s?k=" + keyword + "&page=" + str(page) + "&__mk_ja_JP=" + "カタカナ" + "&ref=nb_sb_noss_1"
+        driver.get(url)
+        time.sleep(5)
 
-    search_results = driver.find_elements_by_css_selector(".s-result-item")
-    items = get_item_list(search_results)
+        search_results = driver.find_elements_by_css_selector(".s-result-item")
+        items = get_item_list(search_results)
+    finally:
+        driver.quit()
+        
     return list(items["asin"]), list(items["img"]), list(items["name"]), list(items["url"])
 
 # amazonの商品在庫確認
@@ -65,8 +69,10 @@ def get_amazon_stock_status_by_asin(asin_code):
     # buy-now-button　の有無で確認する
     try:
         buy_button = driver.find_element_by_id("buy-now-button")
+        driver.quit()
         return "在庫あり"
     except:
+        driver.quit()
         return "在庫なし"
 
 def get_item_list(results):

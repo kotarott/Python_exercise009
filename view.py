@@ -12,14 +12,12 @@ size = (600,700)
 thread_list = {}
 
 load_dotenv()
-
 ACCOUNT = {
     "consumer_key": os.getenv('CONSUMER_KEY'),
     "consumer_secret": os.getenv('CONSUMER_SECRET'),
     "access_token": os.getenv('ACCESS_TOKEN'),
     "access_token_secret": os.getenv('ACCESS_TOKEN_SECRET'),
 }
-
 my_twitter = twitter.Twitter_api(ACCOUNT)
 
 @ eel.expose
@@ -28,20 +26,20 @@ def get_item_list(search_keyword):
 
 @ eel.expose
 def check_and_tweet(items):
-    for item in items:
-        if item not in thread_list:
-            t = multi_thread.multiThread(item, 60, True, my_twitter)
-            t.start()
-            thread_list[item] = t
-        else:
-            t_end = thread_list[item]
-            t_end.check_status = False
-            t_end.join()
-            del thread_list[item]
+    new_items = list(set(items) - set(thread_list.keys()))
+    remove_items = list(set(thread_list.keys()) - set(items))
+    
+    for remove_item in remove_items:
+        thread_list[remove_item].check_status = False
+        thread_list[remove_item].join()
+        del thread_list[remove_item]
+    
+    for new_item in new_items:
+        t = multi_thread.multiThread(new_item, 60, True, my_twitter)
+        t.start()
+        thread_list[new_item] = t
 
-        
-
-
+    # print(thread_list.keys())
 
 desktop.start(app_name,end_point,size)
 #desktop.start(size=size,appName=app_name,endPoint=end_point)

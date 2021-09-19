@@ -15,7 +15,7 @@ def test_thread():
     print(thread_list)
 
 if __name__ == "__main__":
-    # test_get_amazon_items()
+    test_get_amazon_items()
     # test_get_amazon_stock_status_by_asin()
-    test_thread()
-    print(thread_list)
+    # test_thread()
+    # print(thread_list)

@@ -1,3 +1,5 @@
 venv
 secrets_info
 .env
+dist
+build
